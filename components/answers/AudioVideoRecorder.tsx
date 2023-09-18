@@ -1,6 +1,7 @@
 import React, {useRef, useState} from "react";
 import {Box, Button, Paper} from "@mui/material";
 import {CameraAlt, Mic, MicOff} from "@mui/icons-material";
+import NoPhotographyOutlinedIcon from '@mui/icons-material/NoPhotographyOutlined';
 
 type Props = {
     mimeType: string;
@@ -72,29 +73,35 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
     return (
         <Box>
             {!permission ? (
-                <Button variant="contained" color="primary" onClick={getPermission} startIcon={<CameraAlt/>}>
+                <Button variant="contained" color="primary" onClick={getPermission}>
                     Get permission
                 </Button>
             ) : null}
             {permission && recordingStatus === "inactive" ? (
-                <Button variant="contained" color="primary" onClick={startRecording} startIcon={<Mic/>}>
+                <Button variant="contained" color="primary" onClick={startRecording}
+                        startIcon={isVideo ? <CameraAlt/> : <Mic/>}>
                     Start Recording
                 </Button>
             ) : null}
             {recordingStatus === "recording" ? (
-                <Button variant="contained" color="secondary" onClick={stopRecording} startIcon={<MicOff/>}>
+                <Button variant="contained" color="secondary" onClick={stopRecording}
+                        startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}>
                     Stop Recording
                 </Button>
             ) : null}
-            {record ? (
+            {record && (
                 <Paper elevation={3} style={{margin: "20px", padding: "10px"}}>
                     {isVideo ? (
-                        <video src={record} controls/>
+                        record ? (
+                            <video src={record} controls/>
+                        ) : (
+                            <video ref={liveVideoFeed} controls autoPlay/>
+                        )
                     ) : (
                         <audio src={record} controls/>
                     )}
                 </Paper>
-            ) : null}
+            )}
         </Box>
     );
 }
