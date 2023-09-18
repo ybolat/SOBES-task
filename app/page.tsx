@@ -1,7 +1,9 @@
-import Questions from "@/components/questions/Questions";
+import AudioRecord from "@/components/AudioRecord";
 
 export default function Home() {
     return (
-        <Questions/>
+        // <Questions/>
+        // <RecordComponent/>
+        <AudioRecord/>
     )
 }
