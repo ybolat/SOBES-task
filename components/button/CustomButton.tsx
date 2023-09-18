@@ -1,15 +1,16 @@
 import {Button} from "@mui/material";
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 
 type Props = {
     text: string;
     handleClick?: () => void;
     startIcon?: React.ReactNode;
-}
+} & ButtonHTMLAttributes<HTMLButtonElement>
 
-const CustomButton = ({text, handleClick, startIcon}: Props) => (
-    <Button variant="contained" color="primary" onClick={handleClick} startIcon={startIcon}>
+const CustomButton = ({text, handleClick, startIcon, children}: Props) => (
+    <Button variant="contained" component="label" color="primary" onClick={handleClick} startIcon={startIcon}>
         {text}
+        {children}
     </Button>
 )
 

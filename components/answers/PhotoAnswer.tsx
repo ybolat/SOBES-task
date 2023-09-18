@@ -1,13 +1,11 @@
-import React, {ChangeEvent, useId, useState} from "react";
-import {Box, Button, Typography} from "@mui/material";
+import React, {ChangeEvent, useState} from "react";
+import {Box, Input, Typography} from "@mui/material";
 import axios from "axios";
 import CustomButton from "@/components/button/CustomButton";
-import CustomFileInput from "@/components/input/CustomFileInput";
 import Image from "next/image";
 
 const PhotoAnswer = () => {
     const [base64Image, setBase64Image] = useState<string | null>(null);
-    const id = useId();
 
     const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -42,20 +40,26 @@ const PhotoAnswer = () => {
     return (
         <>
             <Box>
-                <CustomFileInput id={id} handleEvent={handleImageUpload} accept={"image/*"}/>
-                <label htmlFor={id}>
-                    <CustomButton text={"Choose photo"}/>
-                </label>
+                <CustomButton text={"Upload photo"}>
+                    <Input
+                        type="file"
+                        style={{display: "none"}}
+                        onChange={handleImageUpload}
+                        inputProps={{accept: "image/*"}}
+                    />
+                </CustomButton>
             </Box>
             {base64Image && (
                 <Box>
-                    <Typography variant="body1">Uploaded Photo:</Typography>
-                    <Image src={base64Image} alt="Uploaded Photo" width={500} height={500}/>
+                    <Box>
+                        <Typography variant="body1">Uploaded Photo:</Typography>
+                        <Image src={base64Image} alt="Uploaded Photo" width={500} height={500}/>
+                    </Box>
+                    <CustomButton
+                        handleClick={sendImageToServer}
+                        text={"Send"}/>
                 </Box>
             )}
-            <CustomButton
-                handleClick={sendImageToServer}
-                text={"Send"}/>
         </>
     );
 }
