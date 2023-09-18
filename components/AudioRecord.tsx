@@ -1,27 +1,27 @@
-'use client';
 import React, {useRef, useState} from 'react';
 
-const mimeType = "audio/webm";
+const mimeType: string = "audio/webm";
 
-const AudioRecord = () => {
-    const [permission, setPermission] = useState(false);
+const AudioRecord: React.FC = () => {
+    const mediaRecorder = useRef<MediaRecorder | null>(null);
+
+    const [permission, setPermission] = useState<boolean>(false);
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const mediaRecorder = useRef<any>(null);
-    const [recordingStatus, setRecordingStatus] = useState("inactive");
-    const [audioChunks, setAudioChunks] = useState([]);
+    const [recordingStatus, setRecordingStatus] = useState<string>("inactive");
+    const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
     const [audio, setAudio] = useState<string | null>(null);
 
     const getMicrophonePermission = async () => {
         if ("MediaRecorder" in window) {
             try {
-                const streamData = await navigator.mediaDevices.getUserMedia({
+                const streamData: MediaStream = await navigator.mediaDevices.getUserMedia({
                     audio: true,
                     video: false,
                 });
                 setPermission(true);
                 setStream(streamData);
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         } else {
             alert("The MediaRecorder API is not supported in your browser.");
@@ -30,33 +30,30 @@ const AudioRecord = () => {
 
     const startRecording = async () => {
         setRecordingStatus("recording");
-        //create new Media recorder instance using the stream
-        const media = stream && new MediaRecorder(stream, { mimeType: mimeType });
-        //set the MediaRecorder instance to the mediaRecorder ref
-        mediaRecorder.current = media;
-        //invokes the start method to start the recording process
-        mediaRecorder.current.start();
-        let localAudioChunks: any = [];
-        mediaRecorder.current.ondataavailable = (event: any) => {
-            if (typeof event.data === "undefined") return;
-            if (event.data.size === 0) return;
-            localAudioChunks.push(event.data);
-        };
-        setAudioChunks(localAudioChunks);
+        if (stream) {
+            mediaRecorder.current = new MediaRecorder(stream, {mimeType: mimeType});
+            let localAudioChunks: Blob[] = [];
+            mediaRecorder.current.ondataavailable = (event: BlobEvent) => {
+                if (event.data && event.data.size > 0) {
+                    localAudioChunks.push(event.data);
+                }
+            };
+            setAudioChunks(localAudioChunks);
+            mediaRecorder.current.start();
+        }
     };
 
     const stopRecording = () => {
         setRecordingStatus("inactive");
-        //stops the recording instance
-        mediaRecorder.current.stop();
-        mediaRecorder.current.onstop = () => {
-            //creates a blob file from the audiochunks data
-            const audioBlob = new Blob(audioChunks, { type: mimeType });
-            //creates a playable URL from the blob file.
-            const audioUrl = URL.createObjectURL(audioBlob);
-            setAudio(audioUrl);
-            setAudioChunks([]);
-        };
+        if (mediaRecorder.current) {
+            mediaRecorder.current.stop();
+            mediaRecorder.current.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: mimeType });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                setAudio(audioUrl);
+                setAudioChunks([]);
+            };
+        }
     };
 
     return (
