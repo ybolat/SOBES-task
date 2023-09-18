@@ -18,10 +18,12 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [chunks, setChunks] = useState<Blob[]>([]);
     const [record, setRecord] = useState<string | null>(null);
+    const [isGetPermissionClicked, setIsGetPermissionClicked] = useState(false);
 
     const isVideo = mimeType.includes("video");
 
     const getPermission = async () => {
+        setIsGetPermissionClicked(true);
         setRecord(null);
         if ("MediaRecorder" in window) {
             try {
@@ -85,23 +87,28 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
                 <CustomButton handleClick={stopRecording} text={"Stop Recording"}
                               startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}/>
             )}
-            {isVideo ? (
-                <>
-                    {record ? (
-                        <CustomPaper>
-                            <video src={record} controls/>
-                        </CustomPaper>
-                    ) : liveVideoFeed && (
-                        <CustomPaper>
-                            <video ref={liveVideoFeed} controls autoPlay/>
-                        </CustomPaper>
-                    )}
-                </>
-            ) : record && (
-                <CustomPaper>
-                    <audio src={record} controls/>
-                </CustomPaper>
-            )}
+            {
+                record ? (
+                    <>
+                        {isVideo ? (
+                            <CustomPaper>
+                                <video src={record} controls/>
+                            </CustomPaper>
+                        ) : (
+                            <CustomPaper>
+                                <audio src={record} controls/>
+                            </CustomPaper>
+                        )}
+                    </>
+                ) : isGetPermissionClicked && (
+                    <>
+                        {isVideo && (
+                            <CustomPaper>
+                                <video ref={liveVideoFeed} controls autoPlay/>
+                            </CustomPaper>
+                        )}</>
+                )
+            }
         </Box>
     );
 }
