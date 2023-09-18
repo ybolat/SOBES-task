@@ -3,7 +3,6 @@ import {Box} from "@mui/material";
 import {CameraAlt, Mic, MicOff} from "@mui/icons-material";
 import NoPhotographyOutlinedIcon from '@mui/icons-material/NoPhotographyOutlined';
 import CustomButton from "@/components/button/CustomButton";
-import CustomPaper from "@/components/paper/CustomPaper";
 
 type Props = {
     mimeType: string;
@@ -87,18 +86,31 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
                 <CustomButton handleClick={stopRecording} text={"Stop Recording"}
                               startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}/>
             )}
-            {!record ? (
-                <video
-                    ref={liveVideoFeed}
-                    autoPlay
-                    className="live-player"
-                ></video>
-            ) : null}
-            {record ? (
-                <div className="recorded-player">
-                    <video className="recorded" src={record} controls></video>
-                </div>
-            ) : null}
+            {!record && isGetPermissionClicked && (
+                <>
+                    {isVideo && (
+                        <Box>
+                            <video
+                                ref={liveVideoFeed}
+                                autoPlay
+                            />
+                        </Box>
+                    )}
+                </>
+            )}
+            {record && (
+                <>
+                    {isVideo ? (
+                        <Box>
+                            <video src={record} controls></video>
+                        </Box>
+                    ) : (
+                        <Box>
+                            <audio src={record} controls></audio>
+                        </Box>
+                    )}
+                </>
+            )}
         </Box>
     );
 }

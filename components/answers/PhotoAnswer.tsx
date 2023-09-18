@@ -53,14 +53,9 @@ const PhotoAnswer = () => {
                     <Image src={base64Image} alt="Uploaded Photo" width={500} height={500}/>
                 </Box>
             )}
-            <Button
-                onClick={sendImageToServer}
-                variant="contained"
-                color="primary"
-                sx={{mt: 3}}
-            >
-                Send
-            </Button>
+            <CustomButton
+                handleClick={sendImageToServer}
+                text={"Send"}/>
         </>
     );
 }
