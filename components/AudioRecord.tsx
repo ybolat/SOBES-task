@@ -32,6 +32,7 @@ const AudioRecord: React.FC = () => {
         setRecordingStatus("recording");
         if (stream) {
             mediaRecorder.current = new MediaRecorder(stream, {mimeType: mimeType});
+            mediaRecorder.current.start();
             let localAudioChunks: Blob[] = [];
             mediaRecorder.current.ondataavailable = (event: BlobEvent) => {
                 if (event.data && event.data.size > 0) {
@@ -39,11 +40,11 @@ const AudioRecord: React.FC = () => {
                 }
             };
             setAudioChunks(localAudioChunks);
-            mediaRecorder.current.start();
         }
     };
 
     const stopRecording = () => {
+        setPermission(false);
         setRecordingStatus("inactive");
         if (mediaRecorder.current) {
             mediaRecorder.current.stop();

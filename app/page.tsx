@@ -1,9 +1,7 @@
-import VideoRecorder from "@/components/VideoRecorder";
+import Questions from "@/components/questions/Questions";
 
 export default function Home() {
     return (
-        // <Questions/>
-        // <AudioRecord/>
-        <VideoRecorder/>
+        <Questions/>
     )
 }

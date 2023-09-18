@@ -8,7 +8,7 @@ import {Box, Divider, Typography} from "@mui/material";
 import InputAnswer from "@/components/answers/InputAnswer";
 import ChooseOneAnswer from "@/components/answers/ChooseOneAnswer";
 import ChooseMultipleAnswers from "@/components/answers/ChooseMultipleAnswers";
-import FileAnswer from "@/components/answers/FileAnswer";
+import AudioVideoRecorder from "@/components/answers/AudioVideoRecorder";
 import PhotoAnswer from "@/components/answers/PhotoAnswer";
 
 const Questions = () => {
@@ -37,10 +37,10 @@ const Questions = () => {
                             <ChooseMultipleAnswers possibleAnswers={question.possibleAnswers ?? []} />
                         )}
                         {question.type === questionTypes[3] && (
-                            <FileAnswer accept={"audio/*"} />
+                            <AudioVideoRecorder mimeType={"audio/webm"} />
                         )}
                         {question.type === questionTypes[4] && (
-                            <FileAnswer accept={"video/*"} />
+                            <AudioVideoRecorder mimeType={"video/webm"} />
                         )}
                         {question.type === questionTypes[5] && <PhotoAnswer />}
                     </Box>
