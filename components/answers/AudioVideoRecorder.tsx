@@ -87,28 +87,18 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
                 <CustomButton handleClick={stopRecording} text={"Stop Recording"}
                               startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}/>
             )}
-            {
-                record ? (
-                    <>
-                        {isVideo ? (
-                            <CustomPaper>
-                                <video src={record} controls/>
-                            </CustomPaper>
-                        ) : (
-                            <CustomPaper>
-                                <audio src={record} controls/>
-                            </CustomPaper>
-                        )}
-                    </>
-                ) : isGetPermissionClicked && (
-                    <>
-                        {isVideo && (
-                            <CustomPaper>
-                                <video ref={liveVideoFeed} controls autoPlay/>
-                            </CustomPaper>
-                        )}</>
-                )
-            }
+            {!record ? (
+                <video
+                    ref={liveVideoFeed}
+                    autoPlay
+                    className="live-player"
+                ></video>
+            ) : null}
+            {record ? (
+                <div className="recorded-player">
+                    <video className="recorded" src={record} controls></video>
+                </div>
+            ) : null}
         </Box>
     );
 }
