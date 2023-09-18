@@ -3,14 +3,12 @@ import React from "react";
 
 type Props = {
     text: string;
+    handleClick?: () => void;
+    startIcon?: React.ReactNode;
 }
 
-const CustomButton = ({text}: Props) => (
-    <Button
-        variant="outlined"
-        component="span"
-        color="primary"
-        sx={{cursor: "pointer"}}>
+const CustomButton = ({text, handleClick, startIcon}: Props) => (
+    <Button variant="contained" color="primary" onClick={handleClick} startIcon={startIcon}>
         {text}
     </Button>
 )

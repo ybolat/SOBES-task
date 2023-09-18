@@ -1,7 +1,8 @@
 import React, {useRef, useState} from "react";
-import {Box, Button, Paper} from "@mui/material";
+import {Box, Paper} from "@mui/material";
 import {CameraAlt, Mic, MicOff} from "@mui/icons-material";
 import NoPhotographyOutlinedIcon from '@mui/icons-material/NoPhotographyOutlined';
+import CustomButton from "@/components/button/CustomButton";
 
 type Props = {
     mimeType: string;
@@ -72,34 +73,30 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
 
     return (
         <Box>
-            {!permission ? (
-                <Button variant="contained" color="primary" onClick={getPermission}>
-                    Get permission
-                </Button>
-            ) : null}
-            {permission && recordingStatus === "inactive" ? (
-                <Button variant="contained" color="primary" onClick={startRecording}
-                        startIcon={isVideo ? <CameraAlt/> : <Mic/>}>
-                    Start Recording
-                </Button>
-            ) : null}
-            {recordingStatus === "recording" ? (
-                <Button variant="contained" color="secondary" onClick={stopRecording}
-                        startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}>
-                    Stop Recording
-                </Button>
-            ) : null}
-            {record && (
+            {!permission && (
+                <CustomButton handleClick={getPermission} text={"Get Permission"}/>
+            )}
+            {permission && recordingStatus === "inactive" && (
+                <CustomButton handleClick={startRecording} text={"Start Recording"}
+                              startIcon={isVideo ? <CameraAlt/> : <Mic/>}/>
+            )}
+            {recordingStatus === "recording" && (
+                <CustomButton handleClick={stopRecording} text={"Stop Recording"}
+                              startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}/>
+            )}
+            {isVideo ? (
                 <Paper elevation={3} style={{margin: "20px", padding: "10px"}}>
-                    {isVideo ? (
+                    {
                         record ? (
                             <video src={record} controls/>
                         ) : (
                             <video ref={liveVideoFeed} controls autoPlay/>
                         )
-                    ) : (
-                        <audio src={record} controls/>
-                    )}
+                    }
+                </Paper>
+            ) : record && (
+                <Paper elevation={3} style={{margin: "20px", padding: "10px"}}>
+                    <audio src={record} controls/>
                 </Paper>
             )}
         </Box>
