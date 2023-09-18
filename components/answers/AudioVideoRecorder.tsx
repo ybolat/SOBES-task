@@ -1,8 +1,9 @@
 import React, {useRef, useState} from "react";
-import {Box, Paper} from "@mui/material";
+import {Box} from "@mui/material";
 import {CameraAlt, Mic, MicOff} from "@mui/icons-material";
 import NoPhotographyOutlinedIcon from '@mui/icons-material/NoPhotographyOutlined';
 import CustomButton from "@/components/button/CustomButton";
+import CustomPaper from "@/components/paper/CustomPaper";
 
 type Props = {
     mimeType: string;
@@ -85,19 +86,21 @@ const AudioVideoRecorder = ({mimeType}: Props) => {
                               startIcon={isVideo ? <NoPhotographyOutlinedIcon/> : <MicOff/>}/>
             )}
             {isVideo ? (
-                <Paper elevation={3} style={{margin: "20px", padding: "10px"}}>
-                    {
-                        record ? (
+                <>
+                    {record ? (
+                        <CustomPaper>
                             <video src={record} controls/>
-                        ) : (
+                        </CustomPaper>
+                    ) : liveVideoFeed && (
+                        <CustomPaper>
                             <video ref={liveVideoFeed} controls autoPlay/>
-                        )
-                    }
-                </Paper>
+                        </CustomPaper>
+                    )}
+                </>
             ) : record && (
-                <Paper elevation={3} style={{margin: "20px", padding: "10px"}}>
+                <CustomPaper>
                     <audio src={record} controls/>
-                </Paper>
+                </CustomPaper>
             )}
         </Box>
     );
